@@ -1,5 +1,5 @@
 <template>
-  <div class="container-sm">
+  <div v-if="reservas!=''" class="container-sm">
     <table class="table table-striped table-hover">
       <thead>
         <tr>
@@ -18,6 +18,9 @@
         </tr>
       </tbody>
     </table>
+  </div>
+  <div v-else>
+      <h3>Sin Reservas</h3>
   </div>
 </template>
 

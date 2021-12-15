@@ -4,17 +4,23 @@
   <h2>{{ propCancha }}</h2>
 
   <Navbar />
-  <h2>Reservas del Dia</h2>
+  <h2>Para Hoy:</h2>
   <TablaReservas :reservas="reservasDia" />
   <hr />
+  <h2>Esta Semana:</h2>
+  <TablaSemana :reservas="reservasSemana" />
+
   <hr />
-  <h2>Reservas del Mes</h2>
+  <h2>Este Mes:</h2>
   <TablaReservas :reservas="reservasMes" />
+
+ 
 </template>
 
 <script>
 import Navbar from "../components/Navbar.vue";
 import TablaReservas from "../components/TablaReservas.vue";
+import TablaSemana from "../components/TablaSemana.vue";
 import { mapState, mapActions } from "vuex";
 
 export default {
@@ -26,6 +32,7 @@ export default {
   components: {
     Navbar,
     TablaReservas,
+    TablaSemana,
   },
 
   computed: {
@@ -61,10 +68,38 @@ export default {
           dia.getDate() == fechaReserva.getDate()
         ) {
           arrayDia.push(reserva);
-          console.log("en el if");
         }
       }
+      if (arrayDia == "") {
+        arrayDia == "Sin reservas";
+      }
       return arrayDia;
+    },
+    reservasSemana() {
+      let arraySemana = [];
+      let reservas = this.reservasProp;
+      let date = new Date();
+      let dias = date.getDay() * 1000 * 60 * 60 * 24;
+      date = date.getTime() - dias;
+      dias = new Date(date);
+      for (let index = dias.getDate(); index < dias.getDate() + 7; index++) {
+        for (const reserva of reservas) {
+          let fechaReserva = new Date(reserva.fecha);
+          fechaReserva = new Date(
+            `${fechaReserva.getFullYear()}-${fechaReserva.getMonth() + 1}-${
+              fechaReserva.getDate() + 2
+            }`
+          );
+           if (
+          dias.getFullYear() == fechaReserva.getFullYear() &&
+          dias.getMonth() == fechaReserva.getMonth() &&
+          index == fechaReserva.getDate()
+        ) {
+          arraySemana.push(reserva);
+        }
+        }
+      }
+      return arraySemana
     },
   },
   methods: {
