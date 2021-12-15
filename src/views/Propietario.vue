@@ -4,7 +4,10 @@
   <h2>{{ propCancha }}</h2>
 
   <Navbar />
-
+  <h2>Reservas del Dia</h2>
+  <TablaReservas :reservas="reservasDia" />
+  <hr />
+  <hr />
   <h2>Reservas del Mes</h2>
   <TablaReservas :reservas="reservasMes" />
 </template>
@@ -18,7 +21,6 @@ export default {
   data() {
     return {
       propCancha: "",
-      
     };
   },
   components: {
@@ -30,17 +32,39 @@ export default {
     ...mapState(["propietario", "canchas", "reservasProp"]),
     reservasMes() {
       let date = new Date();
-      let arrayMes=[]
+      let arrayMes = [];
       for (const reserva of this.reservasProp) {
-        let fechaReserva=new Date(reserva.fecha);
-        if(date.getMonth()==fechaReserva.getMonth()){
-          arrayMes.push(reserva)
+        let fechaReserva = new Date(reserva.fecha);
+        if (date.getMonth() == fechaReserva.getMonth()) {
+          arrayMes.push(reserva);
         }
-        
       }
-      console.log(date.getMonth());
 
       return arrayMes;
+    },
+    reservasDia() {
+      let arrayDia = [];
+      let date = new Date();
+      let dia = new Date(
+        `${date.getFullYear()}-${date.getMonth() + 1}-${date.getDate() + 1}`
+      );
+      for (const reserva of this.reservasProp) {
+        let fechaReserva = new Date(reserva.fecha);
+        fechaReserva = new Date(
+          `${fechaReserva.getFullYear()}-${fechaReserva.getMonth() + 1}-${
+            fechaReserva.getDate() + 2
+          }`
+        );
+        if (
+          dia.getFullYear() == fechaReserva.getFullYear() &&
+          dia.getMonth() == fechaReserva.getMonth() &&
+          dia.getDate() == fechaReserva.getDate()
+        ) {
+          arrayDia.push(reserva);
+          console.log("en el if");
+        }
+      }
+      return arrayDia;
     },
   },
   methods: {
